@@ -6,6 +6,7 @@ use Webleit\ZohoBooksApi\ZohoBooks;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\InvoiceCreated;
+use Webleit\ZohoBooksLaravelServiceProvider\Listeners\UpdateZohoBooksContact;
 
 /**
  * Class ZohoBooksServiceProvider
@@ -26,7 +27,7 @@ class ZohoBooksServiceProvider extends ServiceProvider
 
         // Custom Events
         InvoiceCreated::class => [
-            \App\Listeners\CreateZohoBooksInvoice::class,
+           \Webleit\ZohoBooksLaravelServiceProvider\Listeners\CreateZohoBooksInvoice::class,
         ],
     ];
 
