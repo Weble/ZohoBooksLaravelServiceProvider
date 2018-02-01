@@ -2,6 +2,10 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider\Repositories;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Cashier\Invoice;
+use Webleit\ZohoBooksApi\Models\Contact;
 use Webleit\ZohoBooksApi\ZohoBooks;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\InvoiceCreated;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\LocalInvoiceCreated;
@@ -97,6 +101,25 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
     {
         $invoicesModule = $this->zohoBooks->invoices;
         return $invoicesModule->get($invoiceId);
+    }
+
+    /**
+     * @param $localInvoice
+     * @return mixed
+     */
+    public function storeAndGetZohoInvoicePdf(LocalInvoice $localInvoice)
+    {
+        $path = config('zohobooks.invoice_storage_path', 'invoices') . '/' . $localInvoice->zohobooks_number . '.pdf';
+
+        try {
+            $content = Storage::get($path);
+        } catch (FileNotFoundException $e) {
+            $zohoInvoice = $this->getZohoInvoice($localInvoice->zohobooks_id);
+            $content = $zohoInvoice->getPdf();
+            Storage::put($path, $content);
+        }
+
+        return $content;
     }
 
     /**

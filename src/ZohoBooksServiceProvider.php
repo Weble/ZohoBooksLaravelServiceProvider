@@ -5,7 +5,7 @@ namespace Webleit\ZohoBooksLaravelServiceProvider;
 use Webleit\ZohoBooksApi\ZohoBooks;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Webleit\ZohoBooksLaravelServiceProvider\Events\InvoiceCreated;
+use Webleit\ZohoBooksLaravelServiceProvider\Events\LocalInvoiceCreated;
 use Webleit\ZohoBooksLaravelServiceProvider\Listeners\UpdateZohoBooksContact;
 
 /**
@@ -26,7 +26,7 @@ class ZohoBooksServiceProvider extends ServiceProvider
         ],
 
         // Custom Events
-        InvoiceCreated::class => [
+        LocalInvoiceCreated::class => [
            \Webleit\ZohoBooksLaravelServiceProvider\Listeners\CreateZohoBooksInvoice::class,
         ],
     ];

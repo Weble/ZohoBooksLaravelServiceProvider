@@ -2,6 +2,8 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider\Notifications;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Spark\LocalInvoice;
 use Laravel\Spark\Billable;
 use Illuminate\Bus\Queueable;
@@ -9,6 +11,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Laravel\Cashier\Invoice;
+use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
 
 /**
  * Class InvoicePaid
@@ -38,7 +41,7 @@ class InvoicePaid extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct (Billable $billable, Invoice $invoice, LocalInvoice $localInvoice)
+    public function __construct ($billable, Invoice $invoice, LocalInvoice $localInvoice)
     {
         $this->localInvoice = $localInvoice;
         $this->invoice = $invoice;
@@ -66,10 +69,12 @@ class InvoicePaid extends Notification implements ShouldQueue
     {
         $invoiceData = \Spark::invoiceDataFor($this->billable);
 
+        $content = app(ZohoBooksInvoiceRepository::class)->storeAndGetZohoInvoicePdf($this->localInvoice);
+
         $mailMessage = (new MailMessage)->subject($invoiceData['product'] . ' Invoice')
             ->greeting('Hi ' . explode(' ', $this->billable->name)[0] . '!')
             ->line('Thanks for your continued support. We\'ve attached a copy of your invoice for your records. Please let us know if you have any questions or concerns!')
-            ->attachData($this->localInvoice->pdf(), 'invoice.pdf');
+            ->attachData($content, 'invoice.pdf');
 
         return $mailMessage;
     }

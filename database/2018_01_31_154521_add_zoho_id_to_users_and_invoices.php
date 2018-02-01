@@ -20,6 +20,7 @@ class AddZohoIdToUsersAndInvoices extends Migration
         if (Schema::hasTable('invoices')) {
             Schema::table('invoices', function (Blueprint $table) {
                 $table->bigInteger('zohobooks_id')->index()->nullable();
+                $table->string('zohobooks_number')->nullable();
             });
         }
     }
@@ -37,7 +38,7 @@ class AddZohoIdToUsersAndInvoices extends Migration
 
         if (Schema::hasTable('invoices')) {
             Schema::table('invoices', function (Blueprint $table) {
-                $table->dropColumn(['zohobooks_id']);
+                $table->dropColumn(['zohobooks_id', 'zohobooks_number']);
             });
         }
     }
