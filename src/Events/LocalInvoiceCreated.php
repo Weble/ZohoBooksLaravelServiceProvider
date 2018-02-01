@@ -32,7 +32,7 @@ class LocalInvoiceCreated
      *
      * @return void
      */
-    public function __construct(Billable $billable, Invoice $invoice, LocalInvoice $localInvoice)
+    public function __construct($billable, Invoice $invoice, LocalInvoice $localInvoice)
     {
         $this->billable = $billable;
         $this->invoice = $invoice;

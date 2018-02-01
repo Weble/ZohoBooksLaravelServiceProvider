@@ -10,5 +10,11 @@ return [
      * The organization ID you want to work on.
      * If the account you provided has just one organization, this can be null
      */
-    'organization_id' => env('ZOHOBOOKS_ORGANIZATION_ID', null)
+    'organization_id' => env('ZOHOBOOKS_ORGANIZATION_ID', null),
+
+    /**
+     * When you need the zoho books invoice PDF, it gets stored locally for cache.
+     * This is the path in the storage dir where it gets stored as a pdf file
+     */
+    'invoice_storage_path' => 'invoices'
 ];
