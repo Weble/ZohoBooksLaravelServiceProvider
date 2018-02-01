@@ -35,6 +35,7 @@ class ZohoBooksServiceProvider extends ServiceProvider
     {
         $this->publishMigrations();
         $this->publishConfig();
+        $this->registerRoutes();
 
         foreach ($this->listen as $event => $listeners) {
             foreach ($listeners as $listener) {
@@ -70,5 +71,15 @@ class ZohoBooksServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/zohobooks.php' => config_path('zohobooks.php'),
         ], 'config');
+    }
+
+    /**
+     * Register predefined routes used for Spark.
+     */
+    protected function registerRoutes()
+    {
+        if (class_exists('Laravel\Spark\Providers\AppServiceProvider')) {
+            include __DIR__.'/../routes/web.php';
+        }
     }
 }
