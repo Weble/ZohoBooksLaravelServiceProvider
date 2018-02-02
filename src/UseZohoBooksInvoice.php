@@ -1,8 +1,7 @@
 <?php
 
 namespace Webleit\ZohoBooksLaravelServiceProvider;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\Response;
 use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
 use Laravel\Cashier\Invoice;
 
@@ -44,8 +43,18 @@ trait UseZohoBooksInvoice
     /**
      * @return string
      */
-    public function pdf()
+    public function pdf($storagePath = null)
     {
-        return app(ZohoBooksInvoiceRepository::class)->storeAndGetZohoInvoicePdf($this);
+        return app(ZohoBooksInvoiceRepository::class)->storeAndGetZohoInvoicePdf($this, $storagePath);
+    }
+
+    /**
+     * Create an invoice download response.
+     *
+     * @return Response
+     */
+    public function downloadPdf($storagePath = null)
+    {
+        return app(ZohoBooksInvoiceRepository::class)->downloadZohoInvoicePdf($this, $storagePath);
     }
 }

@@ -3,6 +3,7 @@
 namespace Webleit\ZohoBooksLaravelServiceProvider\Repositories;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Invoice;
 use Webleit\ZohoBooksApi\Models\Contact;
@@ -60,6 +61,7 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
         $zohoInvoice = $this->getOrCreateZohoInvoice($invoice, $zohoContact);
 
         $localInvoice->zohobooks_id = $zohoInvoice->getId();
+        $localInvoice->zohobooks_number = $zohoInvoice->invoice_number;
         $localInvoice->save();
     }
 
@@ -107,19 +109,42 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
      * @param $localInvoice
      * @return mixed
      */
-    public function storeAndGetZohoInvoicePdf(LocalInvoice $localInvoice)
+    public function storeAndGetZohoInvoicePdf(LocalInvoice $localInvoice, $storagePath = null)
     {
-        $path = config('zohobooks.invoice_storage_path', 'invoices') . '/' . $localInvoice->zohobooks_number . '.pdf';
+        $path = config('zohobooks.invoice_storage_path', 'invoices');
+        if ($storagePath) {
+            $path = $storagePath;
+        }
+
+        $path .=  '/' . $localInvoice->zohobooks_number . '.pdf';
 
         try {
             $content = Storage::get($path);
         } catch (FileNotFoundException $e) {
+            /** @var \Webleit\ZohoBooksApi\Models\Invoice $zohoInvoice */
             $zohoInvoice = $this->getZohoInvoice($localInvoice->zohobooks_id);
             $content = $zohoInvoice->getPdf();
             Storage::put($path, $content);
         }
 
         return $content;
+    }
+
+    /**
+     * @param LocalInvoice $localInvoice
+     * @param null $storagePath
+     * @return Response
+     */
+    public function downloadZohoInvoicePdf(LocalInvoice $localInvoice, $storagePath = null)
+    {
+        $filename = $localInvoice->zohobooks_number . '.pdf';
+
+        return new Response($this->storeAndGetZohoInvoicePdf($localInvoice, $storagePath), 200, [
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 
     /**
