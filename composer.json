@@ -1,7 +1,7 @@
 {
     "name": "webleit/zohobookslaravelserviceprovider",
     "type": "library",
-    "version": "1.1.0",
+    "version": "1.2.1",
     "description": "Laravel Service Provider for Zoho Books. Works with both Laravel Cashier and Laravel Spark",
     "keywords": [
         "webleit",
