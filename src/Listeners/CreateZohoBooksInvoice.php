@@ -33,6 +33,6 @@ class CreateZohoBooksInvoice implements ShouldQueue
      */
     public function handle(LocalInvoiceCreated $event)
     {
-        $this->zohoBooks->createOnZohoBooks($event->billable, $event->invoice, $event->localInvoice);
+        $this->zohoBooks->createOnZohoBooks($event->billable, $event->localInvoice);
     }
 }

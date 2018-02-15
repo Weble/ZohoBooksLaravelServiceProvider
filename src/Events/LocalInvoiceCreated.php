@@ -18,11 +18,6 @@ class LocalInvoiceCreated
     public $billable;
 
     /**
-     * @var Invoice
-     */
-    public $invoice;
-
-    /**
      * @var LocalInvoice
      */
     public $localInvoice;
@@ -32,10 +27,9 @@ class LocalInvoiceCreated
      *
      * @return void
      */
-    public function __construct($billable, Invoice $invoice, LocalInvoice $localInvoice)
+    public function __construct($billable,  LocalInvoice $localInvoice)
     {
         $this->billable = $billable;
-        $this->invoice = $invoice;
         $this->localInvoice = $localInvoice;
     }
 }
