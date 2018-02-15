@@ -40,7 +40,7 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
         /** @var LocalInvoice $localInvoice */
         $localInvoice = parent::createForBillable($billable, $invoice);
 
-        event(new LocalInvoiceCreated($billable, $invoice, $localInvoice));
+        event(new LocalInvoiceCreated($billable, $localInvoice));
 
         return $localInvoice;
     }
@@ -51,14 +51,16 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
      * @param Invoice $invoice
      * @param LocalInvoice $localInvoice
      */
-    public function createOnZohoBooks ($billable, $invoice, $localInvoice)
+    public function createOnZohoBooks ($billable, $localInvoice)
     {
         $zohoContact = $this->getOrCreateZohoContact($billable);
 
         $billable->zohobooks_id = $zohoContact->getId();
         $billable->save();
 
-        $zohoInvoice = $this->getOrCreateZohoInvoice($invoice, $zohoContact);
+        $invoice = $billable->findInvoice($localInvoice->provider_id);
+
+        $zohoInvoice = $this->getOrCreateZohoInvoice($localInvoice, $invoice, $zohoContact);
 
         $localInvoice->zohobooks_id = $zohoInvoice->getId();
         $localInvoice->zohobooks_number = $zohoInvoice->invoice_number;
@@ -69,7 +71,7 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
      * @param Billable $billable
      * @return \Webleit\ZohoBooksApi\Models\Contact
      */
-    protected function getOrCreateZohoContact ($billable)
+    public function getOrCreateZohoContact ($billable)
     {
         $zohoContactsModule = $this->zohoBooks->contacts;
 
@@ -152,12 +154,12 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
      * @param Contact $zohoContact
      * @return \Webleit\ZohoBooksApi\Models\Invoice
      */
-    protected function getOrCreateZohoInvoice (Invoice $invoice, Contact $zohoContact)
+    public function getOrCreateZohoInvoice (LocalInvoice $localInvoice, Invoice $invoice, Contact $zohoContact)
     {
         $invoicesModule = $this->zohoBooks->invoices;
 
-        if ($invoice->zohobooks_id) {
-            return $invoicesModule->get($invoice->zohobook_id);
+        if ($localInvoice->zohobooks_id) {
+            return $invoicesModule->get($localInvoice->zohobook_id);
         }
 
         $zohoTax = $this->getOrCreateZohoTax($invoice->tax_percent);
@@ -255,7 +257,7 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
      * @param $billable
      * @return array
      */
-    protected function getContactDataFromBillable ($billable): array
+    protected function getContactDataFromBillable ($billable)
     {
         $data = [
             'contact_name' => $billable->name,
