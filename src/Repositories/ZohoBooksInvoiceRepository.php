@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Invoice;
 use Webleit\ZohoBooksApi\Models\Contact;
 use Webleit\ZohoBooksApi\ZohoBooks;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\InvoiceCreated;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\LocalInvoiceCreated;
 use Laravel\Cashier\Billable;
@@ -18,7 +19,7 @@ use Laravel\Spark\Repositories\StripeLocalInvoiceRepository;
  * Class ZohoBooksInvoiceRepository
  * @package App\Repositories
  */
-class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository
+class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository implements ZohoBooksRepositoryContract
 {
     /**
      * CreateZohoBooksInvoice constructor.

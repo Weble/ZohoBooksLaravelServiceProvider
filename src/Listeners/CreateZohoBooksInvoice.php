@@ -2,11 +2,11 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider\Listeners;
 
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 use Webleit\ZohoBooksLaravelServiceProvider\Events\LocalInvoiceCreated;
 use Laravel\Spark\LocalInvoice;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Webleit\ZohoBooksApi\ZohoBooks;
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
 
 /**
  * Class CreateZohoBooksInvoice
@@ -21,9 +21,9 @@ class CreateZohoBooksInvoice implements ShouldQueue
 
     /**
      * CreateZohoBooksInvoice constructor.
-     * @param ZohoBooks $zohoBooks
+     * @param ZohoBooksRepositoryContract $zohoBooks
      */
-    public function __construct (ZohoBooksInvoiceRepository $zohoBooks)
+    public function __construct (ZohoBooksRepositoryContract $zohoBooks)
     {
         $this->zohoBooks = $zohoBooks;
     }

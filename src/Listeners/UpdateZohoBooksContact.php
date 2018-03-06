@@ -2,7 +2,7 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider\Listeners;
 
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 
 /**
  * Class UpdateZohoBooksContact
@@ -17,9 +17,9 @@ class UpdateZohoBooksContact
 
     /**
      * CreateZohoBooksInvoice constructor.
-     * @param ZohoBooksInvoiceRepository $zohoBooks
+     * @param ZohoBooksRepositoryContract $zohoBooks
      */
-    public function __construct (ZohoBooksInvoiceRepository $zohoBooks)
+    public function __construct (ZohoBooksRepositoryContract $zohoBooks)
     {
         $this->zohoBooks = $zohoBooks;
     }
