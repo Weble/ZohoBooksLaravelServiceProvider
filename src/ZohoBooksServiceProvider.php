@@ -58,8 +58,6 @@ class ZohoBooksServiceProvider extends ServiceProvider
 
     protected function publishMigrations()
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database');
-
         if (! class_exists('AddZohoIdToUsersAndInvoices')) {
             $this->publishes([
                 __DIR__.'/../database/add_zoho_id_to_users_and_invoices.php' => database_path('migrations/'.date('Y_m_d_His', time()).'_add_zoho_id_to_users_and_invoices.php'),
