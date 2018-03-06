@@ -2,8 +2,6 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider\Notifications;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Spark\LocalInvoice;
 use Laravel\Spark\Billable;
 use Illuminate\Bus\Queueable;
@@ -11,7 +9,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Laravel\Cashier\Invoice;
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 
 /**
  * Class InvoicePaid
@@ -69,7 +67,7 @@ class InvoicePaid extends Notification implements ShouldQueue
     {
         $invoiceData = \Spark::invoiceDataFor($this->billable);
 
-        $content = app(ZohoBooksInvoiceRepository::class)->storeAndGetZohoInvoicePdf($this->localInvoice);
+        $content = app(ZohoBooksRepositoryContract::class)->storeAndGetZohoInvoicePdf($this->localInvoice);
 
         $mailMessage = (new MailMessage)->subject($invoiceData['product'] . ' Invoice')
             ->greeting('Hi ' . explode(' ', $this->billable->name)[0] . '!')

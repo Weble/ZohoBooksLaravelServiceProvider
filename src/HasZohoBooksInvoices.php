@@ -3,7 +3,7 @@
 namespace Webleit\ZohoBooksLaravelServiceProvider;
 
 use Illuminate\Http\Response;
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 
 /**
  * Trait HasZohoBooksInvoices
@@ -23,6 +23,6 @@ trait HasZohoBooksInvoices
             ->where('provider_id', $id)
             ->firstOrFail();
 
-        return app(ZohoBooksInvoiceRepository::class)->downloadZohoInvoicePdf($localInvoice, $storagePath);
+        return app(ZohoBooksRepositoryContract::class)->downloadZohoInvoicePdf($localInvoice, $storagePath);
     }
 }

@@ -3,8 +3,8 @@
 namespace Webleit\ZohoBooksLaravelServiceProvider\Http\Controllers;
 
 use Laravel\Spark\LocalInvoice;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 use Webleit\ZohoBooksLaravelServiceProvider\Notifications\InvoicePaid;
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
 use Illuminate\Http\Response;
 use \Laravel\Spark\Http\Controllers\Settings\Billing\StripeWebhookController as SparkStripeWebhookController;
 
@@ -34,7 +34,7 @@ class StripeWebhookController extends SparkStripeWebhookController
 
         $invoice = $user->findInvoice($payload['data']['object']['id']);
 
-        $localInvoice = app(ZohoBooksInvoiceRepository::class)->createForUser($user, $invoice);
+        $localInvoice = app(ZohoBooksRepositoryContract::class)->createForUser($user, $invoice);
 
         $this->sendInvoiceNotification(
             $user, $invoice, $localInvoice

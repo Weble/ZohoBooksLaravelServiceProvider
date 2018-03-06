@@ -2,8 +2,8 @@
 
 namespace Webleit\ZohoBooksLaravelServiceProvider;
 use Illuminate\Http\Response;
-use Webleit\ZohoBooksLaravelServiceProvider\Repositories\ZohoBooksInvoiceRepository;
 use Laravel\Cashier\Invoice;
+use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
 
 /**
  * Trait UseZohoBooksInvoice
@@ -37,7 +37,7 @@ trait UseZohoBooksInvoice
             return null;
         }
 
-        return app(ZohoBooksInvoiceRepository::class)->getZohoInvoice($this->zohobooks_id);
+        return app(ZohoBooksRepositoryContract::class)->getZohoInvoice($this->zohobooks_id);
     }
 
     /**
@@ -45,7 +45,7 @@ trait UseZohoBooksInvoice
      */
     public function pdf($storagePath = null)
     {
-        return app(ZohoBooksInvoiceRepository::class)->storeAndGetZohoInvoicePdf($this, $storagePath);
+        return app(ZohoBooksRepositoryContract::class)->storeAndGetZohoInvoicePdf($this, $storagePath);
     }
 
     /**
@@ -55,6 +55,6 @@ trait UseZohoBooksInvoice
      */
     public function downloadPdf($storagePath = null)
     {
-        return app(ZohoBooksInvoiceRepository::class)->downloadZohoInvoicePdf($this, $storagePath);
+        return app(ZohoBooksRepositoryContract::class)->downloadZohoInvoicePdf($this, $storagePath);
     }
 }
