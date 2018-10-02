@@ -49,14 +49,11 @@ class ZohoBooksServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/zohobooks.php', 'zohobooks');
 
         $this->app->singleton(ZohoBooks::class, function ($app) {
-            $books =  new ZohoBooks(
+            return new ZohoBooks(
                 config('zohobooks.authtoken'),
-                config('zohobooks.organization_id')
+                config('zohobooks.organization_id'),
+                config('zohobooks.region', 'US')
             );
-
-            $books->setRegion(config('zohobooks.region', 'US'));
-
-            return $books;
         });
     }
 
