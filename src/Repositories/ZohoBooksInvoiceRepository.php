@@ -261,8 +261,9 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository implements
     protected function getContactDataFromBillable ($billable)
     {
         $data = [
-            'contact_name' => $billable->name,
+            'contact_name' => $billable->company_name,
             'company_name' => $billable->company_name,
+            'email' => $billable->email,
             'billing_address' => [
                 'address' => $billable->billing_address,
                 'street2' => $billable->billing_address_line_2,
