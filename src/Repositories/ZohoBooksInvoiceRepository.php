@@ -6,6 +6,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Invoice;
+use Laravel\Cashier\InvoiceItem;
 use Webleit\ZohoBooksApi\Models\Contact;
 use Webleit\ZohoBooksApi\ZohoBooks;
 use Webleit\ZohoBooksLaravelServiceProvider\Contracts\ZohoBooksRepositoryContract;
@@ -194,11 +195,17 @@ class ZohoBooksInvoiceRepository extends StripeLocalInvoiceRepository implements
             ];
         }
 
+        $discount = '';
+        if ($invoice->hasDiscount()) {
+            $discount = abs($invoice->discount());
+        }
+
         $data = [
             'customer_id' => $zohoContact->getId(),
             'reference_number' => $invoice->id,
             'date' => $invoice->date()->format('Y-m-d'),
             'line_items' => $lineItems,
+            'discount' => $discount
         ];
 
         $zohoInvoice = $invoicesModule->create($data, [
